@@ -18,13 +18,13 @@ const userSchema = new Schema(
     thoughts: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Thought",
+        ref: "thought",
       },
     ],
     friends: [
       {
         type: Schema.Types.ObjectId,
-        ref: "User",
+        ref: "user",
       },
     ],
   },
@@ -38,10 +38,11 @@ const userSchema = new Schema(
 
 // find length of friends array
 userSchema.virtual("friendCount").get(function () {
+  // add conditional checking if array is empty
   return this.friends.length;
 });
 
-// Initialize our User model
-const User = model("user", postSchema);
+// initialize User model
+const User = model("user", userSchema);
 
 module.exports = User;
