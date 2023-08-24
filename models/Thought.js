@@ -1,4 +1,4 @@
-const { ObjectId } = require("bson");
+// const { ObjectId } = require("bson");
 const { Schema, model } = require("mongoose");
 
 const reactionSchema = new Schema({
@@ -65,4 +65,4 @@ thoughtSchema.virtual("reactionCount").get(function () {
 // initialize Thought model
 const Thought = model("thought", thoughtSchema);
 
-module.exports = { Thought, reactionSchema };
+module.exports = Thought;
