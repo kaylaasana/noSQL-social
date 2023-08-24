@@ -4,6 +4,7 @@ const { Schema, model } = require("mongoose");
 const reactionSchema = new Schema({
   reactionId: {
     type: Schema.Types.ObjectId,
+    // default value is set to a new ObjectId
     default: () => new Types.ObjectId(),
   },
   reactionBody: {
@@ -18,7 +19,8 @@ const reactionSchema = new Schema({
   createdAt: {
     type: Date,
     default: Date.now,
-    //   get: date, //   * Use a getter method to format the timestamp on query
+    // format date
+    get: (date) => date.toLocalDateString(),
   },
 });
 
@@ -33,12 +35,14 @@ const thoughtSchema = new Schema(
     createdAt: {
       type: Date,
       default: Date.now,
-      //   get: date, //   * Use a getter method to format the timestamp on query
+      // format date
+      get: (date) => date.toLocalDateString(),
     },
     username: {
       type: String,
       required: true,
     },
+    // array of nested documents
     reaction: [reactionSchema],
   },
   {
