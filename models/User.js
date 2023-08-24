@@ -39,7 +39,14 @@ const userSchema = new Schema(
 // find length of friends array
 userSchema.virtual("friendCount").get(function () {
   // add conditional checking if array is empty
-  return this.friends.length;
+  //  test this!!!!!!!!!!!!
+  if (!this.friends) {
+    return "you have no friends";
+  } else {
+    if (this.friends.length) {
+      return this.friends.length;
+    }
+  }
 });
 
 // initialize User model

@@ -52,8 +52,14 @@ const thoughtSchema = new Schema(
 // find length of reaction array
 thoughtSchema.virtual("reactionCount").get(function () {
   // add conditional checking if array is empty
-  if(this.reaction.length)
-  return this.reaction.length;
+  //  test this!!!!!!!!!!!!
+  if (!this.reaction) {
+    return "no one cares";
+  } else {
+    if (this.reaction.length) {
+      return this.reaction.length;
+    }
+  }
 });
 
 // initialize Thought model
