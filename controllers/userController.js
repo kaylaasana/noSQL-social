@@ -1,4 +1,4 @@
-const { User, Thought } = require("../models");
+const { User } = require("../models");
 
 // export User functions
 module.exports = {
@@ -40,14 +40,7 @@ module.exports = {
       return res.status(500).json(err);
     }
   },
-  // ```json
-  // // example data
-  // {
-  //   "username": "lernantino",
-  //   "email": "lernantino@gmail.com"
-  // }
-  // ```
-
+  
   // update a user by their id
   async updateUser(req, res) {
     try {

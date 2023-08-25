@@ -47,16 +47,7 @@ module.exports = {
       res.status(500).json();
     }
   },
-
-  // ```json
-  // // example data
-  // {
-  //   "thoughtText": "Here's a cool thought...",
-  //   "username": "lernantino",
-  //   "userId": "5edff358a0fcb779aa7b118b"
-  // }
-  // ```
-
+  
   // update thought by id
   async updateThought(req, res) {
     try {
