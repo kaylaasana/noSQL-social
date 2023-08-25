@@ -5,7 +5,7 @@ module.exports = {
   // get all users and populate friends and thoughts
   async getUsers(req, res) {
     try {
-      const users = await User.find().populate("thought").populate("friends");
+      const users = await User.find().populate("thoughts").populate("friends");
       res.json(users);
     } catch (err) {
       res.status(500).json(err);
@@ -17,7 +17,7 @@ module.exports = {
       const user = await User.findOne({ _id: req.params.userId })
         // filter out unnecessary data
         .select("-__v")
-        .populate("thought")
+        .populate("thoughts")
         .populate("friends");
 
       if (!user) {
@@ -52,12 +52,8 @@ module.exports = {
   async updateUser(req, res) {
     try {
       const updatedUser = await User.findOneAndUpdate(
-        {
-          _id: req.params.userId,
-        },
-        {
-          $set: req.body,
-        },
+        { _id: req.params.userId },
+        { $set: req.body },
         {
           // check that the fields match
           runValidators: true,
@@ -86,16 +82,16 @@ module.exports = {
 
       // **BONUS**: Remove a user's associated thoughts when deleted.
       // find and delete associated thoughts
-      const thought = await Thought.findByIdAndDelete(
-        { user: req.params.userId },
-        { $pull: { thoughts: req.params.userId } }
-      );
+      // const thought = await Thought.deletesomehinggiasdfkjd(
+      //   req.params.thoughtId,
+      //   { $pull: { thoughts: req.params.thoughtId } }
+      // );
 
-      if (!thought) {
-        return res.status(400).json({
-          message: "User deleted, no thoughts found",
-        });
-      }
+      // if (!thought) {
+      //   return res.status(400).json({
+      //     message: "User deleted, no thoughts found",
+      //   });
+      // }
 
       res.json({ message: "User successfully deleted" });
     } catch (err) {
@@ -122,12 +118,12 @@ module.exports = {
       res.status(500).json(err);
     }
   },
-  // delete to remove a friend from a user's friend list
+  // remove a friend from a user's friend list
   // pull method
-  async deleteFriend(req, res) {
+  async removeFriend(req, res) {
     try {
-      const friend = await User.findOneAndDelete(
-        { _id: req.params.userId },
+      const friend = await User.findOneAndUpdate(
+        { _id: req.params.friendId },
         // remove friend from friends array
         { $pull: { friends: { friendId: req.params.friendId } } },
         { runValidators: true, new: true }

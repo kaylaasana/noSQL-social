@@ -57,22 +57,21 @@ module.exports = {
   // }
   // ```
 
-  // update thought by id and update user thoughts array
+  // update thought by id
   async updateThought(req, res) {
     try {
-      const thought = await Thought.findOneAndUpdate({
-        _id: req.params.thoughtId,
-      });
+      const thought = await Thought.findOneAndUpdate(
+        { _id: req.params.thoughtId },
+        { $set: req.body },
+        {
+          // check that the fields match
+          runValidators: true,
+          // return new data
+          new: true,
+        }
+      );
       if (!thought) {
         res.status(404).json({ message: "No thought with this id!" });
-      }
-      const user = await User.findByIdAndUpdate(
-        req.params.userId,
-        { $addToSet: { thoughts: newThought._id } },
-        { runValidators: true, new: true }
-      );
-      if (!user) {
-        res.status(404).json({ message: "No user with this id!" });
       }
 
       res.json(thought);
@@ -92,18 +91,6 @@ module.exports = {
         res.status(404).json({ message: "No thought with this id!" });
       }
 
-      // find and delete associated reactions
-      const reaction = await Thought.findByIdAndDelete(
-        { user: req.params.userId },
-        { $pull: { reaction: req.params.thoughtId } }
-      );
-
-      if (!reaction) {
-        return res.status(400).json({
-          message: "Thought deleted, no reactions found",
-        });
-      }
-
       res.json({ message: "Thought successfully deleted" });
     } catch (err) {
       res.status(500).json(err);
@@ -116,12 +103,8 @@ module.exports = {
   async addReaction(req, res) {
     try {
       const newReaction = await Thought.findOneAndUpdate(
-        {
-          _id: req.params.thoughtId,
-        },
-        {
-          $addToSet: { reaction: req.body },
-        },
+        { _id: req.params.thoughtId },
+        { $addToSet: { reaction: req.body } },
         {
           runValidators: true,
           new: true,
@@ -136,7 +119,7 @@ module.exports = {
   // * delete reaction by it's ID
   async deleteReaction(req, res) {
     try {
-      const reaction = await Thought.findOneAndDelete(
+      const reaction = await Thought.findOneAndUpdate(
         { _id: req.params.thoughtId },
         // remove reaction from reaction array
         { $pull: { reaction: { reactionId: req.params.reactionId } } },
