@@ -5,7 +5,7 @@ module.exports = {
   // get all users and populate friends and thoughts
   async getUsers(req, res) {
     try {
-      const users = await User.find().populate("thought").populate("friends");
+      const users = await User.find().populate('thought').populate('friends');
       res.json(users);
     } catch (err) {
       res.status(500).json(err);
@@ -16,9 +16,9 @@ module.exports = {
     try {
       const user = await User.findOne({ _id: req.params.userId })
       // filter out unnecessary data
-        .select("-__v")
-        .populate("thought")
-        .populate("friends");
+        .select('-__v')
+        .populate('thought')
+        .populate('friends');
 
       if (!user) {
         return res.status(404).json({ message: "No user with that ID" });
