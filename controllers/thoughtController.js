@@ -2,7 +2,7 @@ const { User, Thought } = require("../models");
 
 // export Thought functions
 module.exports = {
-// get all thoughts and populate associated reactions
+  // get all thoughts and populate associated reactions
   async getThoughts(req, res) {
     try {
       const thoughts = await Thought.find().populate("reaction");
@@ -18,9 +18,9 @@ module.exports = {
       const thought = await Thought.findOne({ _id: req.params.thoughtId })
         .select("-__v")
         .populate("reaction");
-      
+
       if (!thought) {
-        return res.status(404).json({ message: 'No thought with that ID'})
+        return res.status(404).json({ message: "No thought with that ID" });
       }
 
       res.json(thought);
@@ -32,19 +32,19 @@ module.exports = {
   // create thought and add to associated user thoughts array
   async createThought(req, res) {
     try {
-        const newThought = await Thought.create(req.body);
-        const user = await User.findByIdAndUpdate(
-            req.params.userId,
-            { $addToSet: { thoughts: newThought._id } },
-            { runValidators: true, new: true }
-        )
-        if (!user) {
-            res.status(404).json({ message: "No user with this id!" });
-          }
+      const newThought = await Thought.create(req.body);
+      const user = await User.findByIdAndUpdate(
+        req.params.userId,
+        { $addToSet: { thoughts: newThought._id } },
+        { runValidators: true, new: true }
+      );
+      if (!user) {
+        res.status(404).json({ message: "No user with this id!" });
+      }
 
-        res.json(newThought)
+      res.json(newThought);
     } catch (err) {
-        res.status(500).json()
+      res.status(500).json();
     }
   },
 
@@ -58,35 +58,35 @@ module.exports = {
   // ```
 
   // update thought by id and update user thoughts array
-  async updateThought(req, res){
+  async updateThought(req, res) {
     try {
-        const thought = await Thought.findOneAndUpdate(
-            { _id: req.params.thoughtId },
-        )
-        if (!thought) {
-            res.status(404).json({ message: "No thought with this id!" });
-          }
-        const user = await User.findByIdAndUpdate(
-            req.params.userId,
-            { $addToSet: { thoughts: newThought._id } },
-            { runValidators: true, new: true }
-        )
-        if (!user) {
-            res.status(404).json({ message: "No user with this id!" });
-          }
+      const thought = await Thought.findOneAndUpdate({
+        _id: req.params.thoughtId,
+      });
+      if (!thought) {
+        res.status(404).json({ message: "No thought with this id!" });
+      }
+      const user = await User.findByIdAndUpdate(
+        req.params.userId,
+        { $addToSet: { thoughts: newThought._id } },
+        { runValidators: true, new: true }
+      );
+      if (!user) {
+        res.status(404).json({ message: "No user with this id!" });
+      }
 
-        res.json(thought)
+      res.json(thought);
     } catch (err) {
-        res.status(500).json(err)
+      res.status(500).json(err);
     }
   },
 
   // delete thought by it's ID
   async deleteThought(req, res) {
     try {
-      const thought = await Thought.findOneAndDelete(
-        { _id: req.params.userId },
-      );
+      const thought = await Thought.findOneAndDelete({
+        _id: req.params.userId,
+      });
 
       if (!thought) {
         res.status(404).json({ message: "No thought with this id!" });
@@ -95,15 +95,15 @@ module.exports = {
       // find and delete associated reactions
       const reaction = await Thought.findByIdAndDelete(
         { user: req.params.userId },
-        { $pull: { reaction: req.params.thoughtId } },
+        { $pull: { reaction: req.params.thoughtId } }
       );
 
-      if(!reaction) {
+      if (!reaction) {
         return res.status(400).json({
-          message: "Thought deleted, no reactions found"
-        })
+          message: "Thought deleted, no reactions found",
+        });
       }
-      
+
       res.json({ message: "Thought successfully deleted" });
     } catch (err) {
       res.status(500).json(err);
@@ -146,7 +146,7 @@ module.exports = {
       if (!reaction) {
         res.status(404).json({ message: "No reaction with this id!" });
       }
-      
+
       res.json({ message: "Reaction successfully deleted" });
     } catch (err) {
       res.status(500).json(err);

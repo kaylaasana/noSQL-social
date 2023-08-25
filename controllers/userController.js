@@ -5,7 +5,7 @@ module.exports = {
   // get all users and populate friends and thoughts
   async getUsers(req, res) {
     try {
-      const users = await User.find().populate('thought').populate('friends');
+      const users = await User.find().populate("thought").populate("friends");
       res.json(users);
     } catch (err) {
       res.status(500).json(err);
@@ -15,10 +15,10 @@ module.exports = {
   async getOneUser(req, res) {
     try {
       const user = await User.findOne({ _id: req.params.userId })
-      // filter out unnecessary data
-        .select('-__v')
-        .populate('thought')
-        .populate('friends');
+        // filter out unnecessary data
+        .select("-__v")
+        .populate("thought")
+        .populate("friends");
 
       if (!user) {
         return res.status(404).json({ message: "No user with that ID" });
@@ -78,27 +78,25 @@ module.exports = {
   // delete user by their id
   async deleteUser(req, res) {
     try {
-      const user = await User.findOneAndDelete(
-        { _id: req.params.userId },
-      );
+      const user = await User.findOneAndDelete({ _id: req.params.userId });
 
       if (!user) {
         res.status(404).json({ message: "No user with this id!" });
       }
-      
+
       // **BONUS**: Remove a user's associated thoughts when deleted.
       // find and delete associated thoughts
       const thought = await Thought.findByIdAndDelete(
         { user: req.params.userId },
-        { $pull: { thoughts: req.params.userId } },
+        { $pull: { thoughts: req.params.userId } }
       );
 
-      if(!thought) {
+      if (!thought) {
         return res.status(400).json({
-          message: "User deleted, no thoughts found"
-        })
+          message: "User deleted, no thoughts found",
+        });
       }
-      
+
       res.json({ message: "User successfully deleted" });
     } catch (err) {
       res.status(500).json(err);
@@ -108,7 +106,7 @@ module.exports = {
   // **`/api/users/:userId/friends/:friendId`**
 
   // add a new friend to user's friend list
-    async addFriend(req, res) {
+  async addFriend(req, res) {
     try {
       const newFriend = await User.create(
         { _id: req.params.userId },
@@ -138,7 +136,7 @@ module.exports = {
       if (!friend) {
         res.status(404).json({ message: "No user with this id!" });
       }
-      
+
       res.json({ message: "Friend successfully deleted" });
     } catch (err) {
       res.status(500).json(err);
