@@ -114,7 +114,7 @@ module.exports = {
   async removeFriend(req, res) {
     try {
       const friend = await User.findOneAndUpdate(
-        { _id: req.params.friendId },
+        { _id: req.params.userId },
         // remove friend from friends array
         { $pull: { friends: { friendId: req.params.friendId } } },
         { runValidators: true, new: true }
@@ -124,7 +124,7 @@ module.exports = {
         res.status(404).json({ message: "No user with this id!" });
       }
 
-      res.json({ message: "Friend successfully deleted" });
+      res.json({ message: "Friend successfully removed" });
     } catch (err) {
       res.status(500).json(err);
     }
