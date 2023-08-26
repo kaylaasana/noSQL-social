@@ -33,17 +33,20 @@ module.exports = {
   async createThought(req, res) {
     try {
       const newThought = await Thought.create(req.body);
+      console.log(newThought)
       const user = await User.findByIdAndUpdate(
         req.params.userId,
         { $addToSet: { thoughts: newThought._id } },
         { runValidators: true, new: true }
       );
+      console.log(user)
       if (!user) {
         res.status(404).json({ message: "No user with this id!" });
       }
 
       res.json(newThought);
     } catch (err) {
+      console.log(err)
       res.status(500).json();
     }
   },
@@ -93,6 +96,7 @@ module.exports = {
   // * create new reactions
   async addReaction(req, res) {
     try {
+      console.log(req)
       const newReaction = await Thought.findOneAndUpdate(
         { _id: req.params.thoughtId },
         { $addToSet: { reaction: req.body } },
@@ -101,6 +105,7 @@ module.exports = {
           new: true,
         }
       );
+      console.log(newReaction)
       res.json(newReaction);
     } catch (err) {
       res.status(500).json(err);

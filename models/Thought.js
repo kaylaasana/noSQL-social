@@ -1,5 +1,5 @@
 // const { ObjectId } = require("bson");
-const { Schema, model } = require("mongoose");
+const { Schema, model, Types } = require("mongoose");
 
 const reactionSchema = new Schema({
   reactionId: {
@@ -20,7 +20,7 @@ const reactionSchema = new Schema({
     type: Date,
     default: Date.now,
     // format date
-    get: (date) => date.toLocalDateString(),
+    get: (date) => date.toLocaleDateString(),
   },
 });
 
@@ -36,7 +36,7 @@ const thoughtSchema = new Schema(
       type: Date,
       default: Date.now,
       // format date
-      get: (date) => date.toLocalDateString(),
+      get: (date) => date.toLocaleDateString(),
     },
     username: {
       type: String,

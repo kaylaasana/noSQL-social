@@ -5,7 +5,7 @@ module.exports = {
   // get all users and populate friends and thoughts
   async getUsers(req, res) {
     try {
-      const users = await User.find()
+      const users = await User.find().populate('friends').populate('thoughts')
       res.json(users);
     } catch (err) {
       res.status(500).json(err);
@@ -91,13 +91,11 @@ module.exports = {
       res.status(500).json(err);
     }
   },
-
-  // **`/api/users/:userId/friends/:friendId`**
-
+  
   // add a new friend to user's friend list
   async addFriend(req, res) {
     try {
-      const newFriend = await User.create(
+      const newFriend = await User.findOneAndUpdate(
         { _id: req.params.userId },
         // push method
         { $addToSet: { friends: req.params.friendId } },
